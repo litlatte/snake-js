@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <title>Snake game</title>
 </head>
-<body>
+<body class='bg-light'>
     <!-- I create a canvas that will be handled by the javascript file -->
-    <canvas id='game-content'>
-
-    </canvas>
+    <h1 class="mt-5 text-center">Snake Game</h1>
+    <div class='text-center mt-4' id='canvas-container'>
+        <canvas class='d-inline' id="game-content">Your browser doesn't support canvas</canvas>
+        <p class='d-block' id='game-points'>Points: 0</p>
+        <p class='d-block' id='game-points-record'>Record: 0</p>        
+    </div>
     <!--I import the javascript file-->
-    <div id='game-points'>Points: </div>
     <script src='js/main.js'></script>
     
 

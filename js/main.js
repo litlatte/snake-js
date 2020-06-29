@@ -25,11 +25,9 @@ class Snake{
     }
 
     controlBodyFaceHit(){
-        for(var i=0; i<this.x.length-1; i++){
-            for(var j=i+1; j<this.x.length; j++){
-                if(this.x[i]==this.x[j] && this.y[i]==this.y[j]){
-                    this.lost=true
-                }
+        for(var j=1; j<this.x.length; j++){
+            if(this.x[0]==this.x[j] && this.y[0]==this.y[j]){
+                this.lost=true
             }
         }
     }
@@ -116,7 +114,12 @@ class Game{
     key_right = [68]
     key_down = [83]
     key_left = [65]
-    constructor( width, height, block_l, margin, ctx, points_label){
+    constructor( width, height, block_l, margin, ctx, points_label, points_record_label){
+        this.bg_color = "#2f5755"
+        this.snake_body_color = "#263238"
+        this.snake_head_color = "#263238"
+        this.apple_color = "#f65c51"
+        this.margin_color = "#e5243f"
         this.totalParts=10
         this.started=false
         this.points=0
@@ -133,6 +136,8 @@ class Game{
         this.snake = new Snake(this)
         this.apple = new Apple(this)
         this.points_label=points_label
+        this.record=0
+        this.points_record_label=points_record_label
         this.onGame = false
     }
 
@@ -144,21 +149,21 @@ class Game{
         this.ctx.fillRect((x*this.block_l)+this.margin, (y*this.block_l)+this.margin, this.block_l, this.block_l)
     }
     draw(){
-        this.ctx.fillStyle = "#F44336" //Margin color
+        this.ctx.fillStyle = this.margin_color //Margin color
         this.ctx.fillRect(0,0,canvas.width,canvas.height)
-        this.ctx.fillStyle = "#333" //Background color
+        this.ctx.fillStyle = this.bg_color
         this.ctx.fillRect(this.margin, this.margin, this.width*this.block_l, this.height*this.block_l)
-        this.ctx.fillStyle = "#FF5722" //Apple color
+        this.ctx.fillStyle = this.apple_color //Apple color
         this.drawRect(this.apple.x, this.apple.y)
         var i = this.snake.x.length-1
-        this.ctx.fillStyle = "white"//Snake body color
+        this.ctx.fillStyle = this.snake_body_color//Snake body color
         this.drawRect(this.snake.x[i], this.snake.y[i])
         i--
         for(; i>0 ; i--){
             this.drawRect(this.snake.x[i], this.snake.y[i])
         }
         
-        this.ctx.fillStyle = "#FF9800" //Snake head color
+        this.ctx.fillStyle = this.snake_head_color //Snake head color
         this.drawRect(this.snake.x[i], this.snake.y[i])
 
     }
@@ -208,14 +213,14 @@ class Game{
     }
 
     drawAnimation(p){
-            this.ctx.fillStyle = "#F44336" //Margin color
+            this.ctx.fillStyle =  this.margin_color//Margin color
             this.ctx.fillRect(0,0,canvas.width,canvas.height)
-            this.ctx.fillStyle = "#333" //Background color
+            this.ctx.fillStyle = this.bg_color //Background color
             this.ctx.fillRect(this.margin, this.margin, this.width*this.block_l, this.height*this.block_l)
-            this.ctx.fillStyle = "#FF5722" //Apple color
+            this.ctx.fillStyle = this.apple_color
             this.drawRect(this.apple.x, this.apple.y)
             var i = this.snake.x.length-1
-            this.ctx.fillStyle = "white"//Snake body color
+            this.ctx.fillStyle = this.snake_body_color//Snake body color
             
             if(this.snake.y[i-1]>this.snake.y[i]){
                 //The snake tale is oriented towards up
@@ -247,7 +252,7 @@ class Game{
                 this.drawRect(this.snake.x[i], this.snake.y[i])
             }
             this.drawRect(this.snake.x[i], this.snake.y[i])
-            this.ctx.fillStyle = "#FF9800" //Snake head color
+            this.ctx.fillStyle = this.snake_head_color //Snake head color
             this.drawHeadPart(this.snake.x[i], this.snake.y[i], p)
 
     }
@@ -309,6 +314,10 @@ class Game{
     }
     lostScreen(){
         if(!this.onGame){
+            if(this.points>this.record){
+                this.record =this.points
+                this.points_record_label.innerHTML=`<p>Record: ${this.record}</p>`
+            }
             this.reset()
         }
     }
@@ -364,7 +373,7 @@ class Game{
         }
     }
     start(evnt){
-        if(!this.started && !this.key_left.includes(event.keyCode)){
+        if(!this.started && (this.key_up.includes(event.keyCode) | this.key_down.includes(event.keyCode) | this.key_right.includes(event.keyCode) )){
             this.onGame=true
             this.started=true;
             if(this.key_up.includes(event.keyCode)) {
@@ -404,12 +413,9 @@ class Game{
 
 
 var points = document.getElementById('game-points')
+var points_record = document.getElementById('game-points-record')
+
 var canvas = document.getElementById("game-content")
 var context = canvas.getContext('2d')
-game = new Game(40, 30, 20, 10, context, points) // (canvas height in blocks, canvas width in blocks, block size, margin, canvas context)
-game.addKeyMapping(38, 39, 40, 37)
+game = new Game(40, 30, 20, 10, context, points, points_record) // (canvas height in blocks, canvas width in blocks, block size, margin, canvas context)
 game.initialize()
-
-
-
-
