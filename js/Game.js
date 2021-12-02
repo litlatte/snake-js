@@ -14,7 +14,7 @@
 
 /* Helper Functions*/
 
-const sleep = ms => new Promise(res => setTimeout(res, ms));
+const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 
 /* Classes */
@@ -35,7 +35,6 @@ class Apple {
 
 //Snake class
 class Snake {
-    UP = 0;
     height = 0
     width = 0
     x = []
@@ -132,7 +131,7 @@ class Game {
     key_right = [68]
     key_down = [83]
     key_left = [65]
-    constructor(width, height, block_l, margin, ctx, points_label, points_record_label, buttonsContainer) {
+    constructor(width, height, block_l, margin, ctx, points_label, points_record_label, buttonsContainer, message_box=null) {
         this.bg_color = "#2f5755"
         this.snake_body_color = "#263238"
         this.snake_head_color = "#263238"
@@ -158,11 +157,12 @@ class Game {
         this.record = 0
         this.points_record_label = points_record_label
         this.onGame = false
-        this.buttonsContainer = buttonsContainer;
+        this.buttonsContainer = buttonsContainer
+        this.message_box = message_box
     }
 
     setFrames(frames) {
-        this.totalParts = number
+        this.totalParts = frames
     }
 
     drawRect(x, y) {
@@ -288,12 +288,12 @@ class Game {
         this.initialize()
     }
     getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
+        var letters = '0123456789ABCDEF'
+        var color = '#'
         for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
+            color += letters[Math.floor(Math.random() * 16)]
         }
-        return color;
+        return color
     }
     refresh() {
         this.current_direction = this.next_direction
@@ -399,34 +399,35 @@ class Game {
                     if (this.current_direction !== 2) {
                         this.next_direction = 0
                     }
-                    break;
+                    break
                 case 'r': //right
                     if (this.current_direction !== 3) {
                         this.next_direction = 1
                     }
-                    break;
+                    break
 
                 case 'd': //down
                     if (this.current_direction !== 0) {
                         this.next_direction = 2
                     }
-                    break;
+                    break
                 case 'l': //left
                     if (this.current_direction !== 1) {
                         this.next_direction = 3
                     }
-                    break;
+                    break
             }
         }
     }
     setBtnCssClass(btn_css_class){
-        this.btn_css_class=btn_css_class;
+        this.btn_css_class=btn_css_class
     }
-    start(type, event) {//
+    start(type, event) {
+        if(this.message_box) this.message_box.innerHTML = ""
         var check = type ? !this.started && (this.key_up.includes(event.keyCode) | this.key_down.includes(event.keyCode) | this.key_right.includes(event.keyCode)) : event !='left';
         if (check) {
             this.onGame = true
-            this.started = true;
+            this.started = true
             if (type?this.key_up.includes(event.keyCode):event=='u') {
                 this.next_direction = 0
             }
@@ -437,7 +438,7 @@ class Game {
             else if (type?this.key_down.includes(event.keyCode):event=='d') {
                 this.next_direction = 2
             }
-            document.addEventListener('keydown', ev => this.keyGamePressed(ev));
+            document.addEventListener('keydown', ev => this.keyGamePressed(ev))
             if (this.buttonsContainer) {
                 var btnUp = document.getElementById(`game-${this.btns_id}-up`)
                 btnUp.replaceWith(btnUp.cloneNode(true))
@@ -463,7 +464,7 @@ class Game {
                     }
                     this.refresh()
                 }
-            })();
+            })()
         }
 
 
@@ -471,6 +472,11 @@ class Game {
     initialize() {
         this.apple.generate()
         this.draw()
+        if(this.message_box){
+            this.message_box.innerHTML = this.buttonsContainer ? "Press 'up', 'down' or 'right' to start, left is disabled on game start" : `<p>Press '${String.fromCharCode(this.key_up[0])}', '${String.fromCharCode(this.key_down[0])}' or '${String.fromCharCode(this.key_right[0])}' to start the game, '${String.fromCharCode(this.key_left[0])}' is disabled on game start</p>`
+        }
+        this.points_record_label.innerHTML = `<p>Record: ${this.record}</p>`
+        this.points_label.innerHTML = "<p>Points: " + this.points + "</p>"
         document.addEventListener('keydown', ev => this.start(true, ev))
         if (this.buttonsContainer) {
             this.btns_id = Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
