@@ -423,9 +423,9 @@ class Game {
         this.btn_css_class=btn_css_class
     }
     start(type, event) {
-        if(this.message_box) this.message_box.innerHTML = ""
         var check = type ? !this.started && (this.key_up.includes(event.keyCode) | this.key_down.includes(event.keyCode) | this.key_right.includes(event.keyCode)) : event !='left';
         if (check) {
+            if(this.message_box) this.message_box.innerHTML = ""
             this.onGame = true
             this.started = true
             if (type?this.key_up.includes(event.keyCode):event=='u') {
